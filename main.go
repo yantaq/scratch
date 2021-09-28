@@ -8,5 +8,5 @@ import (
 
 func main() {
 	y := app.GCD(2, 4)
-	fmt.Printf("gcd for %d and %d is %d", 2, 4, y)
+	fmt.Printf("gcd(%d, %d) => %d", 2, 4, y)
 }
