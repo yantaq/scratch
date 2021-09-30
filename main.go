@@ -9,7 +9,7 @@ import (
 
 func main() {
 
-	var ops = flag.String("ops", "", "compute operations based on -ops flag value")
+	var ops = flag.String("ops", "", "flag required \"-ops string\" i.e: -ops gcd")
 	flag.Parse()
 
 	switch *ops {
@@ -19,7 +19,10 @@ func main() {
 	case "nfib":
 		y := app.Fib(4)
 		fmt.Printf("nfib(%d) => %d", 4, y)
+	case "clone":
+		app.Clone()
+		fmt.Println("git clone ...done.")
 	default:
-		fmt.Println("missing operations flag: --gcd, --nfib ...")
+		flag.PrintDefaults()
 	}
 }
