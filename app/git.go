@@ -10,10 +10,11 @@ import (
 )
 
 // Clone git repo into target dir
-func Clone(url, path, targetDir string) {
+func Clone(url, path, targetDir string) (string, error) {
 	targetDir, err := CreateTemporaryDirectory(targetDir + "-")
 	if err != nil {
 		log.Fatalln("Error creating temp dir: ", err)
+		return "", err
 	}
 	repo := url + path
 	// if _, err := os.Stat(targetPath); !os.IsNotExist(err) {
@@ -27,9 +28,11 @@ func Clone(url, path, targetDir string) {
 	out, err := ExecuteCommand(cmdStr)
 
 	if err != nil {
-		fmt.Printf("error cloning repo: %s \n %s", repo, out)
-		log.Fatal(err)
+		log.Fatal("Error cloning repo: ", repo, out, err)
+		return "", err
 	}
+
+	return targetDir, nil
 }
 
 // Branch check branch
