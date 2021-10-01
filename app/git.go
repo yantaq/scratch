@@ -9,25 +9,18 @@ import (
 	"strings"
 )
 
-// Clone git repo
+// Clone git repo into target dir
 func Clone(url, path, targetDir string) {
-	// func Clone(url, path, targetPath string) {
-	// path := ":identity/aws-access" + ".git"
-	// url := "git@ghe.megaleo.com"
-
 	targetDir, err := CreateTemporaryDirectory(targetDir + "-")
-	// "/tmp/aws-access"
 	if err != nil {
 		log.Fatalln("Error creating temp dir: ", err)
 	}
-	log.Println("Created temp dir: ", targetDir)
-	repo := url + path + ".git"
+	repo := url + path
 	// if _, err := os.Stat(targetPath); !os.IsNotExist(err) {
-	// 	// os.RemoveAll(targetPath)
-	// 	// log.Fatalln("target path exist: ", targetPath)
+	// os.RemoveAll(targetPath)
+	// log.Fatalln("target path exist: ", targetPath)
 	// }
-
-	// _ = os.Mkdir(targetDir, os.ModeDir)
+	// _ = os.Mkdir(targetPath, os.ModeDir)
 
 	// out, err := exec.Command("git", "clone", repo, targetPath).Output()
 	cmdStr := "git clone " + repo + " " + targetDir
@@ -41,7 +34,7 @@ func Clone(url, path, targetDir string) {
 
 // Branch check branch
 func Branch() {
-	os.Chdir("/tmp/aws-access")
+	os.Chdir("/tmp/access")
 	out, _ := ExecuteCommand("git branch")
 	branches := strings.Fields(out)
 	if len(branches) > 2 {
@@ -73,12 +66,11 @@ func ExecuteCommand(commandString string) (string, error) {
 	return string(out), err
 }
 
-// CreateTemporaryDirectory creat temp dir
 func CreateTemporaryDirectory(prefix string) (string, error) {
 	// Create a local temporary directory
 	dirName, err := ioutil.TempDir("/tmp", prefix)
 	if err != nil {
-		log.Fatalln("Failed to create temporary directory (pattern=)", prefix)
+		log.Fatalln("Failed to create temporary directory pattern=", prefix)
 		return "", err
 	}
 	log.Println("Created temporary directory: ", dirName)
