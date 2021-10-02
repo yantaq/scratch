@@ -16,20 +16,11 @@ func Clone(url, path, targetDir string) (string, error) {
 		log.Fatalln("Error creating temp dir: ", err)
 		return "", err
 	}
-	repo := url + path
-	// if _, err := os.Stat(targetPath); !os.IsNotExist(err) {
-	// os.RemoveAll(targetPath)
-	// log.Fatalln("target path exist: ", targetPath)
-	// }
-	// _ = os.Mkdir(targetPath, os.ModeDir)
-
-	// out, err := exec.Command("git", "clone", repo, targetPath).Output()
+	repo := url + "/" + path
 	cmdStr := "git clone " + repo + " " + targetDir
 	out, err := ExecuteCommand(cmdStr)
-
 	if err != nil {
-		log.Fatal("Error cloning repo: ", repo, out, err)
-		return "", err
+		log.Fatalln("Error: ", out, err.Error())
 	}
 
 	return targetDir, nil
@@ -44,11 +35,7 @@ func ExecuteCommand(commandString string) (string, error) {
 	argString := parts[1]
 	argsList := strings.Split(argString, " ")
 	log.Println("running cmd: ", command, argString)
-	out, err := exec.Command(command, argsList...).Output()
-	if err != nil {
-		fmt.Println("Error: ", command, argString)
-		log.Fatal(err)
-	}
+	out, err := exec.Command(command, argsList...).CombinedOutput()
 
 	return string(out), err
 }

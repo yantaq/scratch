@@ -20,9 +20,9 @@ func main() {
 	case "nfib":
 		y := app.Fib(4)
 		fmt.Printf("nfib(%d) => %d", 4, y)
-	// case "clone":
-	// app.Clone("git@ghe.megaleo.com", ":identity/aws-access", "aws-access")
-	// fmt.Println("git clone ...done.")
+	case "clone":
+		app.Clone("https://github.com", "yantaq/scratch", "scratch")
+		fmt.Println("git clone ...done.")
 	case "branch":
 		app.CreatePushBranch()
 	case "pkg":
