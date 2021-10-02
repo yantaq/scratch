@@ -35,23 +35,6 @@ func Clone(url, path, targetDir string) (string, error) {
 	return targetDir, nil
 }
 
-// Branch check branch
-func Branch() {
-	os.Chdir("/tmp/access")
-	out, _ := ExecuteCommand("git branch")
-	branches := strings.Fields(out)
-	if len(branches) > 2 {
-		fmt.Println("more than 1 banch: ", out)
-	} else {
-		fmt.Println("1 banch: ", branches)
-	}
-}
-
-func remove(s []string, i int) []string {
-	s[i] = s[len(s)-1]
-	return s[:len(s)-1]
-}
-
 // ExecuteCommand runs external commands
 func ExecuteCommand(commandString string) (string, error) {
 	// Tidyup whitespace
@@ -60,15 +43,17 @@ func ExecuteCommand(commandString string) (string, error) {
 	command := strings.TrimSpace(parts[0])
 	argString := parts[1]
 	argsList := strings.Split(argString, " ")
+	log.Println("running cmd: ", command, argString)
 	out, err := exec.Command(command, argsList...).Output()
 	if err != nil {
-		fmt.Printf("error cloning repo: %s \n", out)
+		fmt.Println("Error: ", command, argString)
 		log.Fatal(err)
 	}
 
 	return string(out), err
 }
 
+// CreateTemporaryDirectory create temp dir
 func CreateTemporaryDirectory(prefix string) (string, error) {
 	// Create a local temporary directory
 	dirName, err := ioutil.TempDir("/tmp", prefix)
@@ -78,4 +63,37 @@ func CreateTemporaryDirectory(prefix string) (string, error) {
 	}
 	log.Println("Created temporary directory: ", dirName)
 	return dirName, nil
+}
+
+// CreatePushBranch branch check branch
+func CreatePushBranch() {
+	employees := []string{"jon.doe"}
+	projDir := "/tmp/proj dir"
+	os.Chdir(projDir)
+	err := os.Chdir(projDir)
+	if err != nil {
+		log.Fatalln("Error changing dir: ", err)
+	}
+
+	name := strings.Replace(employees[0], ".", "_", 1)
+	branchName := "remove_" + name
+	createBranchCmd := "git checkout -b " + branchName
+	out, _ := ExecuteCommand(createBranchCmd)
+	fmt.Println("Branch created: ", branchName, out)
+
+	checkoutBranchCmd := "git checkout " + branchName
+	out, _ = ExecuteCommand(checkoutBranchCmd)
+	fmt.Println("Branch checkout: ", branchName, out)
+
+	commitMsg := "remove_" + name
+	commitBranchCmd := "git commit -a -m " + commitMsg
+	log.Println(commitBranchCmd)
+	out, _ = ExecuteCommand(commitBranchCmd)
+
+	pushUpstreamCmd := "git push --set-upstream origin " + branchName
+	out, _ = ExecuteCommand(pushUpstreamCmd)
+	log.Println(pushUpstreamCmd)
+	if strings.Contains(out, "pull/new") {
+		log.Println("pushed to upstream: ", out)
+	}
 }

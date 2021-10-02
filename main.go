@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/yantaq/scratch/app"
+	foo "github.com/yantaq/scratch/pkg"
 )
 
 func main() {
@@ -19,9 +20,15 @@ func main() {
 	case "nfib":
 		y := app.Fib(4)
 		fmt.Printf("nfib(%d) => %d", 4, y)
-	case "clone":
-		app.Clone()
-		fmt.Println("git clone ...done.")
+	// case "clone":
+	// app.Clone("git@ghe.megaleo.com", ":identity/aws-access", "aws-access")
+	// fmt.Println("git clone ...done.")
+	case "branch":
+		app.CreatePushBranch()
+	case "pkg":
+		fmt.Println("pkg example: ", foo.D())
+	case "cmd":
+		app.CmdOutput()
 	default:
 		flag.PrintDefaults()
 	}
