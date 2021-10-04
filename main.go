@@ -32,13 +32,14 @@ func main() {
 		c := make(chan int)
 		go app.WriteToC(c, 20)
 		time.Sleep(1 * time.Second)
+		fmt.Println("Read: ", <-c)
+		time.Sleep(1 * time.Second)
 		_, ok := <-c
 		if ok {
 			fmt.Println("Channel is open!")
 		} else {
 			fmt.Println("Channel is closed!")
 		}
-		time.Sleep(1 * time.Second)
 	default:
 		flag.PrintDefaults()
 	}
