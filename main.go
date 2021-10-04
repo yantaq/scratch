@@ -27,6 +27,8 @@ func main() {
 		fmt.Println("pkg example: ", foo.D())
 	case "open":
 		app.Open("")
+	case "ls":
+		app.LS()
 	default:
 		flag.PrintDefaults()
 	}

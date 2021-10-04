@@ -12,7 +12,7 @@ import (
 
 // Clone git repo into target dir
 func Clone(url, path, targetDir string) (string, error) {
-	targetDir, err := CreateTemporaryDirectory(targetDir + "-")
+	targetDir, err := CreateTempDir(targetDir + "-")
 	if err != nil {
 		log.Fatalln("Error creating temp dir: ", err)
 		return "", err
@@ -24,11 +24,24 @@ func Clone(url, path, targetDir string) (string, error) {
 		log.Fatalln("Error: ", out, err.Error())
 	}
 
+	path, err = os.Getwd()
+	if err != nil {
+		log.Println(err)
+	}
+	log.Println(path)
+
+	lsCmd := "ls -l ."
+	out, err = cmd.Run(lsCmd)
+
+	if err == nil {
+		log.Println(out)
+	}
+
 	return targetDir, nil
 }
 
-// CreateTemporaryDirectory create temp dir
-func CreateTemporaryDirectory(prefix string) (string, error) {
+// CreateTempDir create temp dir
+func CreateTempDir(prefix string) (string, error) {
 	// Create a local temporary directory
 	dirName, err := ioutil.TempDir("/tmp", prefix)
 	if err != nil {
