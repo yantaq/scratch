@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"time"
 
 	"github.com/yantaq/scratch/app"
 	foo "github.com/yantaq/scratch/pkg"
@@ -27,8 +28,17 @@ func main() {
 		fmt.Println("pkg example: ", foo.D())
 	case "open":
 		app.Open("")
-	case "ls":
-		app.LS()
+	case "chan":
+		c := make(chan int)
+		go app.WriteToC(c, 20)
+		time.Sleep(1 * time.Second)
+		_, ok := <-c
+		if ok {
+			fmt.Println("Channel is open!")
+		} else {
+			fmt.Println("Channel is closed!")
+		}
+		time.Sleep(1 * time.Second)
 	default:
 		flag.PrintDefaults()
 	}
