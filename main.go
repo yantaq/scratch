@@ -23,12 +23,10 @@ func main() {
 	case "clone":
 		app.Clone("https://github.com", "yantaq/scratch", "scratch")
 		fmt.Println("git clone ...done.")
-	case "branch":
-		app.CreatePushBranch()
 	case "pkg":
 		fmt.Println("pkg example: ", foo.D())
-	case "cmd":
-		app.CmdOutput()
+	case "open":
+		app.Open("")
 	default:
 		flag.PrintDefaults()
 	}

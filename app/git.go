@@ -5,8 +5,9 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"os/exec"
 	"strings"
+
+	"github.com/yantaq/scratch/cmd"
 )
 
 // Clone git repo into target dir
@@ -18,26 +19,12 @@ func Clone(url, path, targetDir string) (string, error) {
 	}
 	repo := url + "/" + path
 	cmdStr := "git clone " + repo + " " + targetDir
-	out, err := ExecuteCommand(cmdStr)
+	out, err := cmd.Run(cmdStr)
 	if err != nil {
 		log.Fatalln("Error: ", out, err.Error())
 	}
 
 	return targetDir, nil
-}
-
-// ExecuteCommand runs external commands
-func ExecuteCommand(commandString string) (string, error) {
-	// Tidyup whitespace
-	commandString = strings.Join(strings.Fields(commandString), " ")
-	parts := strings.SplitAfterN(commandString, " ", 2)
-	command := strings.TrimSpace(parts[0])
-	argString := parts[1]
-	argsList := strings.Split(argString, " ")
-	log.Println("running cmd: ", command, argString)
-	out, err := exec.Command(command, argsList...).CombinedOutput()
-
-	return string(out), err
 }
 
 // CreateTemporaryDirectory create temp dir
@@ -65,20 +52,20 @@ func CreatePushBranch() {
 	name := strings.Replace(employees[0], ".", "_", 1)
 	branchName := "remove_" + name
 	createBranchCmd := "git checkout -b " + branchName
-	out, _ := ExecuteCommand(createBranchCmd)
+	out, _ := cmd.Run(createBranchCmd)
 	fmt.Println("Branch created: ", branchName, out)
 
 	checkoutBranchCmd := "git checkout " + branchName
-	out, _ = ExecuteCommand(checkoutBranchCmd)
+	out, _ = cmd.Run(checkoutBranchCmd)
 	fmt.Println("Branch checkout: ", branchName, out)
 
 	commitMsg := "remove_" + name
 	commitBranchCmd := "git commit -a -m " + commitMsg
 	log.Println(commitBranchCmd)
-	out, _ = ExecuteCommand(commitBranchCmd)
+	out, _ = cmd.Run(commitBranchCmd)
 
 	pushUpstreamCmd := "git push --set-upstream origin " + branchName
-	out, _ = ExecuteCommand(pushUpstreamCmd)
+	out, _ = cmd.Run(pushUpstreamCmd)
 	log.Println(pushUpstreamCmd)
 	if strings.Contains(out, "pull/new") {
 		log.Println("pushed to upstream: ", out)
