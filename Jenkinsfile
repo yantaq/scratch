@@ -4,5 +4,8 @@ podTemplate {
             sh 'echo setting up env'
             checkout scm
         }
+        stage('cat Jenkinsfile') {
+            sh 'cat Jenkinsfile'
+        }
     }
 }
