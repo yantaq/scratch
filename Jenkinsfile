@@ -1,3 +1,7 @@
+@Library('sharedLibrary') _
+
+def REPO = getRepoName()
+
 podTemplate {
     node(POD_LABEL) {
         stage('setup env') {
@@ -6,6 +10,8 @@ podTemplate {
         }
         stage('cat Jenkinsfile') {
             sh 'cat Jenkinsfile'
+            sh "cat repo: $REPO"
         }
     }
 }
+
