@@ -11,7 +11,7 @@ podTemplate {
         }
         stage('cat Jenkinsfile') {
             sh 'cat Jenkinsfile'
-            sh "cat repo: $REPO"
+            sh "echo repo: $REPO"
         }
     }
 }
